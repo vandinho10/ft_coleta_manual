@@ -1,9 +1,22 @@
 @echo off
 chcp 65001 > nul
-REM coleta_manual.cmd
+REM COLETA MANUAL
 REM Este script é usado para coletar arquivos de um equipamento com CronosX+Linux através do CMD.
 REM Uso:
 REM coleta_manual.cmd
+
+REM Obtém a data e hora local do sistema
+for /f "skip=1" %%x in ('wmic os get localdatetime') do if not defined DATE_NOW set DATE_NOW=%%x
+
+REM Extrai ano, mês, dia, hora e minuto da variável DATE_NOW
+set YEAR=%DATE_NOW:~0,4%
+set MONTH=%DATE_NOW:~4,2%
+set DAY=%DATE_NOW:~6,2%
+set HOUR=%DATE_NOW:~8,2%
+set MINUTE=%DATE_NOW:~10,2%
+
+REM Concatena as variáveis para formar a data/hora no formato desejado
+set TODAY=%YEAR%%MONTH%%DAY%_%HOUR%%MINUTE%
 
 REM Solicita o nome do equipamento
 set /p EQUIPAMENTO="Digite o nome do equipamento para criação da pasta: "
@@ -22,7 +35,7 @@ IF NOT EXIST "%BASE_COLETA%" (
     echo Diretório %BASE_COLETA% criado.
 )
 
-set EQUIPAMENTO_DIR=%BASE_COLETA%%EQUIPAMENTO%
+set EQUIPAMENTO_DIR=%BASE_COLETA%%EQUIPAMENTO%_%TODAY%
 
 REM Cria o diretório do equipamento, se não existir
 IF NOT EXIST "%EQUIPAMENTO_DIR%" (
